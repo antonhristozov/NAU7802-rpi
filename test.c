@@ -1,3 +1,8 @@
+/*
+ * This is a quick way to check the value in all
+ * 32 registers of the NAU7802.
+ */
+
 #include "NAU7802.h"
 #include <stdio.h>
 
