@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 
 void
 test0(int fd){
@@ -200,16 +201,17 @@ test8(int fd){
 	delay(5000);
 	NAU7802_tareLoad(fd, &lc);
 	for(;;){
+		while(!NAU7802_CR(fd));
 		printf("Load : %+10.4f\n",
-				NAU7802_getAvgLinearLoad(fd, &lc));
+				NAU7802_getSmoothLoad(fd, &lc));
 	}
 }
 
 void
 test9(int fd){
-	int i, z, shift, rate;
+	int i, z, shift, rate, readings;
 	struct load_cal lc;
-	float cGain;
+	float cGain, lpf;
 	NAU7802_init_load_cal(&lc);
 	printf("\n...Test...8\n");
 	printf("\nChip ID : %i\n",
@@ -227,19 +229,24 @@ test9(int fd){
 	printf("CAL_ERR : %i\n", z);
 	delay(1000);
 	NAU7802_getLinearLoad(fd, &lc);
-	delay(5000);
+	readings = (int)(pow(2, (double)rate) * 600);
+	delay(1000);
 	for(;;){
 		NAU7802_tareLoad(fd, &lc);
-		for(i=0; i<300; i++)
+		for(i=0; i<readings; i++){
+			while(!NAU7802_CR(fd));
 			printf("Load : %+10.4f\n",
-				NAU7802_getAvgLinearLoad(fd, &lc));
-			
+				NAU7802_getSmoothLoad(fd, &lc));
+		}	
 		printf("Enter Cal Gain : ");
 		scanf("%f", &cGain);
 		printf("Enter shift bits : ");
 		scanf("%i", &shift);
+		printf("Enter LPF_Beta : ");
+		scanf("%f", &lpf);
 		NAU7802_setLoadCalGain(&lc, cGain);
 		NAU7802_setShiftLoad(&lc, shift);
+		lc.LPF_Beta = lpf;
 		NAU7802_removeTareLoad(&lc);
 		delay(100);
 	}
@@ -257,21 +264,26 @@ main(int argc, char **argv){
 		printf("Powerup Normal : %d\n", z);
 	else
 		printf("Powerup Fail : %d\n", z);
+	delay(200);
 
 	/* enable NAU7802 */
 	if(z = NAU7802_enable(fd) == 1)
 		printf("Enabled : %d\n", z);
 	else
 		printf("Enable Failed : %d\n", z);
+	delay(200);
 
 	/* set gain, set from argv[2] if given */
 	if(argc >= 3)
 		gain = atoi(argv[2]);
 	z = NAU7802_setGain(fd, gain);
 	printf("Gain set to : %d\n", z);
+	delay(200);
 
 	z = NAU7802_AVDDSourceSelect(fd, AVDD_INT);
 	printf("Source : %i\n", z);
+	delay(200);
+
 	z = NAU7802_setLDO(fd, V3_0);
 	printf("Voltage : %i\n", z);
 	delay(2000);

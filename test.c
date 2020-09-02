@@ -10,5 +10,7 @@ main(int argc, char **argv){
 		if(i==15)
 			printf("\n");
 	}
+	printf("\n");
+	return 0;
 }
 	

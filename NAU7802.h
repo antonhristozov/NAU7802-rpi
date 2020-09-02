@@ -106,6 +106,8 @@ struct load_cal{
 	double zero; 		/* cal load zero, b value */
 	uint8_t shift; 		/* bits to shift out */
 	double offset;		/* this is for software offsets */
+	double smoothLoad;	/* used for smoothng load data */
+	double LPF_Beta;	/* smoothing filter 0<B<1 */
 };
 
 int NAU7802_init(int fd);
@@ -167,6 +169,8 @@ int NAU7802_enablePGAChopper(int fd);
 double NAU7802_getLinearLoad(int fd, struct load_cal *lc);
 
 double NAU7802_getAvgLinearLoad(int fd, struct load_cal *lc);
+
+double NAU7802_getSmoothLoad(int fd, struct load_cal *lc);
 
 int NAU7802_setSampleRate(int fd, uint8_t rate);
 

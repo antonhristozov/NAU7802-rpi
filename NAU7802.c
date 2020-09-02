@@ -356,11 +356,11 @@ int
 NAU7802_ch1ReadOffsetCal(int fd){
 	uint32_t offset;
 	offset = wiringPiI2CReadReg8(fd, OCAL1_B2) << 24;
-	printf("offset_B2 : %i\t", offset);
+	//printf("offset_B2 : %i\t", offset);
 	offset |= wiringPiI2CReadReg8(fd, OCAL1_B1) << 16;
-	printf("offset_B1 : %i\t", offset);
+	//printf("offset_B1 : %i\t", offset);
 	offset |= wiringPiI2CReadReg8(fd, OCAL1_B0) << 8;
-	printf("offset_B0 : %i\n", offset);
+	//printf("offset_B0 : %i\n", offset);
 	return (int)(offset >> 8);
 }
 
@@ -379,13 +379,13 @@ int
 NAU7802_ch1ReadGainCal(int fd){
 	uint32_t gain;
 	gain = wiringPiI2CReadReg8(fd, GCAL1_B3) ;
-	printf("gain_B3 : %X\t", gain);
+	//printf("gain_B3 : %X\t", gain);
 	gain = wiringPiI2CReadReg8(fd, GCAL1_B2) ;
-	printf("gain_B2 : %X\t", gain);
+	//printf("gain_B2 : %X\t", gain);
 	gain = wiringPiI2CReadReg8(fd, GCAL1_B1) ;
-	printf("gain_B1 : %X\t", gain);
+	//printf("gain_B1 : %X\t", gain);
 	gain = wiringPiI2CReadReg8(fd, GCAL1_B0);
-	printf("gain_B0 : %X\n", gain);
+	//printf("gain_B0 : %X\n", gain);
 	return (int)gain;
 }
 
@@ -568,6 +568,22 @@ NAU7802_getAvgLinearLoad(int fd, struct load_cal *lc){
 }
 
 /*
+ * Simple low pass filter applied to load
+ * values using floating point.  Uses beta
+ * from cal_load struct.
+ *
+ * Return smoothed load value.
+ */
+double
+NAU7802_getSmoothLoad(int fd, struct load_cal *lc){
+	float rawLoad;
+	rawLoad = NAU7802_getLinearLoad(fd, lc);
+	lc->smoothLoad = lc->smoothLoad - (lc->LPF_Beta * (lc->smoothLoad - rawLoad));
+	return lc->smoothLoad;
+}
+
+
+/*
  * Set the sample rate.  Use the Macros to
  * change the sample rate.
  *
@@ -680,7 +696,7 @@ NAU7802_tareLoad(int fd, struct load_cal *lc){
 	if(rate == -1)
 		return DBL_MAX;
 	for(i=rate; i>0; --i)
-		avg += NAU7802_getLinearLoad(fd, lc);
+		avg += NAU7802_getAvgLinearLoad(fd, lc);
 	avg = avg / rate;
 	old_offset = lc->offset;
 	lc->offset = avg;
@@ -757,4 +773,6 @@ NAU7802_init_load_cal(struct load_cal *lc){
 	lc->zero = 0.0;
 	lc->shift = 0;
 	lc->offset = 0.0;
+	lc->smoothLoad = 0.0;
+	lc->LPF_Beta = 0.15;
 }
