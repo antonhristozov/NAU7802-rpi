@@ -7,4 +7,7 @@ of the NAU7802 and possibly some examples.
 The test.c will read all 32 registers of the NAU7802 and
 display them.
 
+Use the compile.sh to compile load(NAU7802_driver.c)
+and test.c or as an example.
+
 Most likely I use poor naming, but there it is.
