@@ -260,14 +260,14 @@ main(int argc, char **argv){
 	fd = wiringPiI2CSetup(NAU7802_ADDR);
 
 	/* initialize NAU7802 */
-	if(z = NAU7802_init(fd) == 1)
+	if((z = NAU7802_init(fd)) == 1)
 		printf("Powerup Normal : %d\n", z);
 	else
 		printf("Powerup Fail : %d\n", z);
 	delay(200);
 
 	/* enable NAU7802 */
-	if(z = NAU7802_enable(fd) == 1)
+	if((z = NAU7802_enable(fd)) == 1)
 		printf("Enabled : %d\n", z);
 	else
 		printf("Enable Failed : %d\n", z);
