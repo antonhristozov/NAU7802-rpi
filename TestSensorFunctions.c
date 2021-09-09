@@ -24,9 +24,13 @@ void read_test(int fd){
 
 int
 main(int argc, char **argv){
-	int fd = init_sensor();
+	int fd = -1;
+	printf("Initalize sensor \n");
+	fd = init_sensor();
+	printf("Calibrate sensor \n");
 	calibrate_sensor(fd);
-	delay(5000);
+	printf("Wait for sensor to get ready \n");
+	delay(500);
 	read_test(fd);
 	return 0;
 }
