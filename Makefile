@@ -3,7 +3,7 @@ CFLAGS= -Wall -g -c
 LIBS= -lwiringPi -lm
 TARGETS= load test
 
-top: load
+top: load test
 
 NAU7802.o: NAU7802.c NAU7802.h
 	$(CC) $(CFLAGS) NAU7802.c

@@ -18,7 +18,6 @@
  */
 int
 NAU7802_init(int fd){
-	unsigned int pwrup;
 	wiringPiI2CWriteReg8(fd, PU_CTRL, RESET);
 	wiringPiI2CWriteReg8(fd, PU_CTRL, NORMAL_OP); 
 	delayMicroseconds(200);
@@ -213,7 +212,7 @@ NAU7802_setLDO(int fd, int voltage){
  */
 int
 NAU7802_AVDDSourceSelect(int fd, int source){
-	uint32_t s, reg;
+	uint32_t s;
 	if(source == AVDD_INT)
 		s = AVDD_INT;
 	else if(source == AVDD_PIN)
