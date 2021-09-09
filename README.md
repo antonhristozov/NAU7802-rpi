@@ -10,4 +10,16 @@ display them.
 Use the compile.sh to compile load(NAU7802_driver.c)
 and test.c or as an example.
 
-Most likely I use poor naming, but there it is.
+Alternativele using the Makefile will give the same result:
+make
+
+Building individual targetscan happen with the following commands:
+make load
+make test
+
+To remove the executablesi and intermediate object files use:
+make clean
+
+To execute just run the produced executables:
+./test
+./load number_of_test
