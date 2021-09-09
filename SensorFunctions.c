@@ -56,3 +56,7 @@ int calibrate_sensor(int fd){
         return z;
 }
 
+float convert_to_pounds(int value){
+	float pounds = 0.0;
+	return pounds;
+}
