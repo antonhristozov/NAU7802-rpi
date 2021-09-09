@@ -1,9 +1,9 @@
 CC= gcc
 CFLAGS= -Wall -g -c
 LIBS= -lwiringPi -lm
-TARGETS= load test
+TARGETS= load test TestSensorFunctions
 
-top: load test
+top: load test TestSensorFunctions
 
 NAU7802.o: NAU7802.c NAU7802.h
 	$(CC) $(CFLAGS) NAU7802.c
@@ -11,9 +11,16 @@ NAU7802.o: NAU7802.c NAU7802.h
 NAU7802_driver.o: NAU7802_driver.c
 	$(CC) $(CFLAGS) NAU7802_driver.c
 
+SensorFunctions.o: SensorFunctions.c
+	$(CC) $(CFLAGS) SensorFunctions.c
+
 load: NAU7802.o NAU7802_driver.o
 	$(CC) NAU7802.o NAU7802_driver.o \
 		$(LIBS) -o load
+
+TestSensorFunctions: NAU7802.o TestSensorFunctions.o SensorFunctions.o
+	$(CC) NAU7802.o SensorFunctions.o TestSensorFunctions.o \
+		$(LIBS) -o TestSensorFunctions 
 
 test.o: test.c
 	$(CC) $(CFLAGS) test.c
@@ -27,4 +34,6 @@ all: load test
 clean:
 	rm -f test.o NAU7802.o \
 		NAU7802_driver.o \
+		SensorFunctions.o \
+		TestSensorFunctions.o \
 		$(TARGETS)
