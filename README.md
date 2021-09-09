@@ -7,19 +7,24 @@ of the NAU7802 and possibly some examples.
 The test.c will read all 32 registers of the NAU7802 and
 display them.
 
-Use the compile.sh to compile load(NAU7802_driver.c)
-and test.c or as an example.
+TestSensorFunctions shows tyical use of the intermediate 
+layer functions part of SensorFunctions.c.
 
-Alternativele using the Makefile will give the same result:
+Use the compile.sh to compile load(NAU7802_driver.c)
+, test.c and TestSensorFunctions.c.
+
+Alternatively using the Makefile will produce the same result:
 make
 
-Building individual targetscan happen with the following commands:
+Building individual targets can happen through the following commands:
 make load
 make test
+make TestSensorFunctions
 
-To remove the executablesi and intermediate object files use:
+To remove the executables and intermediate object files use:
 make clean
 
-To execute just run the produced executables:
+To execute just run one of the produced executables:
 ./test
 ./load number_of_test
+./TestSensorFunctions
