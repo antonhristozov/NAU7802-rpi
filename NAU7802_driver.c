@@ -213,7 +213,7 @@ test9(int fd){
 	struct load_cal lc;
 	float cGain, lpf;
 	NAU7802_init_load_cal(&lc);
-	printf("\n...Test...8\n");
+	printf("\n...Test...9\n");
 	printf("\nChip ID : %i\n",
 			NAU7802_getChipRevId(fd));
 	printf("Enter Cal Gain : ");
