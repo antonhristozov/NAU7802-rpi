@@ -8,6 +8,12 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <math.h>
+#include <string.h>
+#include <unistd.h>
+#include <time.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 int init_sensor(){
 	int fd;
@@ -59,4 +65,26 @@ int calibrate_sensor(int fd){
 float convert_to_pounds(int value){
 	float pounds = 0.0;
 	return pounds;
+}
+
+int open_file(const char *fname){
+    return open(fname,O_CREAT | O_WRONLY,S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
+}
+
+int close_file(int fd){
+   return close(fd);
+}
+
+
+int write_to_file(int fd,double dv){
+  
+  if(fd){
+      char line[80];
+      sprintf(line,"%lf %lu,\n",dv,(unsigned long)time(NULL));
+      printf(line);
+      return write(fd,line,strlen(line));	
+  }
+  else{
+    return 0;
+  }
 }
