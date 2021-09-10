@@ -20,15 +20,17 @@ void read_test(int fd){
 	NAU7802_init_load_cal(&lc);
 	NAU7802_setLoadCalGain(&lc, 0.25);
 	NAU7802_setShiftLoad(&lc, 0);
-	/* read value from adc */
+	NAU7802_calibrate(fd, CALMOD_GCS);
+	NAU7802_getLinearLoad(fd, &lc);
+	delay(5000);
+	NAU7802_tareLoad(fd, &lc);
 	for(;;){
 		while(!NAU7802_CR(fd));
 		/* Use 4 bit shift to smooth out noise */
 		adc_value = NAU7802_readADCS(fd,SHIFT4); 
 		printf("ADC : %i\n",adc_value) ;
-		delay(1000);
-	        load_value = NAU7802_getLinearLoad(fd, &lc);
-		printf("Load : %+10.4f\n",load_value);
+	        load_value = NAU7802_getAvgLinearLoad(fd, &lc);
+		printf("Average Load : %+10.4f\n",load_value);
 		delay(1000);
 	}
 }
