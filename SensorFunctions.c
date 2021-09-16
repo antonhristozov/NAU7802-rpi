@@ -62,9 +62,38 @@ int calibrate_sensor(int fd){
         return z;
 }
 
-float convert_to_pounds(int value){
-	float pounds = 0.0;
-	return pounds;
+int read_adc(int fd){
+   const int SHIFT4 = 4;
+   while(!NAU7802_CR(fd));
+   /* Use 4 bit shift to smooth out noise */
+   return NAU7802_readADCS(fd,SHIFT4); 
+}
+
+double read_load(int fd){
+   struct load_cal lc;
+   NAU7802_init_load_cal(&lc);
+   NAU7802_setLoadCalGain(&lc, 0.25);
+   NAU7802_setShiftLoad(&lc, 0);
+   NAU7802_calibrate(fd, CALMOD_GCS);
+   return NAU7802_getLinearLoad(fd, &lc);
+}
+
+double read_average_load(int fd){
+   struct load_cal lc;
+   NAU7802_init_load_cal(&lc);
+   NAU7802_setLoadCalGain(&lc, 0.25);
+   NAU7802_setShiftLoad(&lc, 0);
+   NAU7802_calibrate(fd, CALMOD_GCS);
+   NAU7802_getLinearLoad(fd, &lc);
+   NAU7802_tareLoad(fd, &lc);
+   return NAU7802_getAvgLinearLoad(fd, &lc);
+}
+
+
+double convert_to_kilograms(double value){
+	float kilograms = 0.0;
+	kilograms = value/2.2;
+	return kilograms;
 }
 
 int open_file(const char *fname){
@@ -87,4 +116,43 @@ int write_to_file(int fd,double dv){
   else{
     return 0;
   }
+}
+
+int read_thread(void){
+   static int first_call = 0;
+   int status = 0;
+   static int fd = 0;
+   double load_value = 0.0;
+   if(first_call == 0){
+	fd = init_sensor();
+	printf("Calibrate sensor \n");
+	calibrate_sensor(fd);
+        first_call = 1;
+   }
+   load_value = read_load(fd); 
+   load_value = convert_to_kilograms(load_value); 
+   /* Place value in shared memory */
+   return status;
+}
+
+int process_thread(void){
+   int status = 0;
+   /* Read array of data from shared memoryi and find aaverage */
+   /* Place resut value in shared memory */
+   return status;
+}
+
+int log_to_file_thread(double value){
+   static int first_call = 0;
+   int status = 0;
+   static int fd = 0;
+   /* Read value in shared memory */
+   if(first_call == 0){
+      fd = open_file("weight_sensor.log");
+      first_call = 1;
+   }   
+   if(status == 0){
+     status = write_to_file(fd,value);
+   }
+   return status;
 }

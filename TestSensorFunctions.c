@@ -27,7 +27,7 @@ void read_test(int fd,int filed){
 	NAU7802_tareLoad(fd, &lc);
 	for(i=0;i<10;i++){
 		while(!NAU7802_CR(fd));
-		/* Use 4 bit shift to smooth out noise */
+		/* Use 4 bi shift to smooth out noise */
 		adc_value = NAU7802_readADCS(fd,SHIFT4); 
 		printf("ADC : %i\n",adc_value) ;
 	        load_value = NAU7802_getAvgLinearLoad(fd, &lc);
