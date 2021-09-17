@@ -19,9 +19,26 @@ int read_thread(void){
    return status;
 }
 
+#define LEN  10
+
 int process_thread(void){
    int status = 0;
-   /* Read array of data from shared memoryi and find aaverage */
+   static double array[LEN] = {0.0};
+   static unsigned int index = 0;
+   double value=0.0;
+   double sum = 0;
+   int i;
+   /* Read a value from shared memory and find average */
+   array[index] = value;
+   index ++;
+   if(index >= LEN){
+      index = 0;
+   }
+   sum = 0.0;
+   for(i=0;i<LEN;i++){
+      sum += array[i];
+   }
+   value = sum/LEN;
    /* Place resut value in shared memory */
    return status;
 }
