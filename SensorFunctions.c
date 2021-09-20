@@ -75,6 +75,7 @@ double read_load(int fd){
    NAU7802_setLoadCalGain(&lc, 0.25);
    NAU7802_setShiftLoad(&lc, 0);
    NAU7802_calibrate(fd, CALMOD_GCS);
+   while(!NAU7802_CR(fd));
    return NAU7802_getLinearLoad(fd, &lc);
 }
 
@@ -86,6 +87,7 @@ double read_average_load(int fd){
    NAU7802_calibrate(fd, CALMOD_GCS);
    NAU7802_getLinearLoad(fd, &lc);
    NAU7802_tareLoad(fd, &lc);
+   while(!NAU7802_CR(fd));
    return NAU7802_getAvgLinearLoad(fd, &lc);
 }
 
@@ -110,7 +112,7 @@ int write_to_file(int fd,double dv){
   if(fd){
       char line[80];
       sprintf(line,"%lf %lu,\n",dv,(unsigned long)time(NULL));
-      printf(line);
+      /*printf(line);*/
       return write(fd,line,strlen(line));	
   }
   else{
