@@ -1,5 +1,6 @@
 /* AADL interface functions */
 
-int log_to_file_thread(double value);
-int read_thread(void);
-int process_thread(void);
+int hx711_initialize(void);
+int hx711_read_sensor_data(void);
+int hx711_process_sensor_data(void);
+int hx711_log_sensor_data(double value);

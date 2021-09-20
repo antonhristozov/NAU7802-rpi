@@ -2,7 +2,14 @@
 #include <stdio.h>
 #include "SensorFunctions.h"
 
-int read_thread(void){
+
+int hx711_initialize(void){
+	int fd = -1;
+   fd = init_sensor();
+   calibrate_sensor(fd);
+}
+
+int hx711_read_sensor_data(void){
    static int first_call = 0;
    int status = 0;
    static int fd = 0;
@@ -21,7 +28,7 @@ int read_thread(void){
 
 #define LEN  10
 
-int process_thread(void){
+int hx711_process_sensor_data(void){
    int status = 0;
    static double array[LEN] = {0.0};
    static unsigned int index = 0;
@@ -43,7 +50,7 @@ int process_thread(void){
    return status;
 }
 
-int log_to_file_thread(double value){
+int hx711_log_sensor_data(double value){
    static int first_call = 0;
    int status = 0;
    static int fd = 0;
