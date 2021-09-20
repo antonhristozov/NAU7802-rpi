@@ -21,7 +21,6 @@ int hx711_initialize(void){
 }
 
 double hx711_read_sensor_data(void){
-   const int SHIFT4 = 4;
    static int first_call = 0;
    static int fd = 0;
    double load_value = 0.0;
@@ -29,7 +28,8 @@ double hx711_read_sensor_data(void){
 	fd = hx711_initialize();
         first_call = 1;
    }
-   load_value = NAU7802_readADCS(fd,SHIFT4); 
+   while(!NAU7802_CR(fd));
+   load_value = NAU7802_readADC(fd); 
    load_value = NAU7802_getLinearLoad(fd, &lc);
    load_value = convert_to_kilograms(load_value);
    /* Place value in shared memory */
