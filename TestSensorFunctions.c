@@ -47,13 +47,15 @@ void hx711_test(){
    for(i=0;i<10;i++){
       printf("\n");
       value = hx711_read_sensor_data();
-      printf("Value read : %+10.2f\n",value);
+      printf("Value read:%+10.2f      ",value);
       value = hx711_process_sensor_data(value);
-      printf("Average value : %+10.2f\n",value);
+      printf("Average value:%+10.2f ",value);
       status = hx711_log_sensor_data(value);
-      printf("Value Logged : %+10.2f\n",value);
       if(status < 0){
          printf("Error logging sensor data status : %d\n",status);
+      }
+      else{
+	 printf("logged. \n");
       }
       sleep(1);
    }
