@@ -4,9 +4,9 @@
 #include "SensorFunctions.h"
 
 static struct load_cal lc;
+static int fd = 0;
 
 int hx711_initialize(void){
-   int fd = -1;
    printf("Initializing sensor\n\n");
    fd = init_sensor();
    calibrate_sensor(fd);
@@ -22,10 +22,9 @@ int hx711_initialize(void){
 
 double hx711_read_sensor_data(void){
    static int first_call = 0;
-   static int fd = 0;
    double load_value = 0.0;
    if(first_call == 0){
-	fd = hx711_initialize();
+	//fd = hx711_initialize();
         first_call = 1;
    }
    while(!NAU7802_CR(fd));
@@ -65,14 +64,14 @@ double hx711_process_sensor_data(double value){
 int hx711_log_sensor_data(double value){
    static int first_call = 0;
    int status = 0;
-   static int fd = 0;
+   static int log_fd = 0;
    /* Read value in shared memory */
    if(first_call == 0){
-      fd = open_file("weight_sensor.log");
+      log_fd = open_file("weight_sensor.log");
       first_call = 1;
    }
    if(status == 0){
-     status = write_to_file(fd,value);
+     status = write_to_file(log_fd,value);
    }
    return status;
 }

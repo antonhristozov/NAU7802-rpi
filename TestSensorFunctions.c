@@ -44,6 +44,7 @@ void hx711_test(){
    double value;
    int i;
    printf("hx711_test() starting \n");
+   hx711_initialize();
    for(i=0;i<10;i++){
       printf("\n");
       value = hx711_read_sensor_data();
