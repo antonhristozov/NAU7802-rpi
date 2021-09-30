@@ -4,6 +4,7 @@
 
 /* include headers */
 #include "NAU7802.h"
+#include "SensorFunctions.h" 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -111,9 +112,12 @@ int write_to_file(int fd,double dv){
   
   if(fd){
       char line[80];
+      int status = 0;
       sprintf(line,"%lf %lu,\n",dv,(unsigned long)time(NULL));
       /*printf(line);*/
-      return write(fd,line,strlen(line));	
+      status = write(fd,line,strlen(line));	
+      fsync(fd);
+      return status;
   }
   else{
     return 0;
