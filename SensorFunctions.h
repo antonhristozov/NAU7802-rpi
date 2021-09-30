@@ -2,7 +2,7 @@
  * Sensor Functions 
  * Prototype Headers 
  */
-int init_sensor();
+int init_sensor(void);
 int calibrate_sensor(int fd);
 int read_adc(int fd);
 double read_load(int fd);

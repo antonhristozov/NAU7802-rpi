@@ -16,7 +16,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-int init_sensor(){
+int init_sensor(void){
 	int fd;
 	int z, gain=128;
 	fd = wiringPiI2CSetup(NAU7802_ADDR);
